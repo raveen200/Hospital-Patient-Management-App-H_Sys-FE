@@ -1,8 +1,8 @@
-import "./App.css";
 import { Dashboard } from "./pages/DashBoard";
 import { ListOfPatient } from "./pages/ListOfPatient";
 import { LoginForm } from "./pages/Login";
 import { SignUp } from "./pages/SignUp";
+
 
 function App() {
   return (
@@ -11,6 +11,7 @@ function App() {
       <ListOfPatient/>
       {/* <LoginForm /> */}
       {/* <SignUp /> */}
+  
     </div>
   );
 }
