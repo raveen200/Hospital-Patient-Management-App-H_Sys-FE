@@ -58,6 +58,9 @@ import TooltipCmp, {
   TooltipTrigger,
   TooltipProvider,
 } from "@/components/ui/tooltip";
+
+import { formatDate } from "../utils/dateUtils.js";
+
 import { useDispatch, useSelector } from "react-redux";
 
 import { getPatientsAction } from "../redux/actions/PatientAction";
@@ -72,7 +75,7 @@ export function ListOfPatient() {
   const dispatch = useDispatch();
   const patients = useSelector((state) => state.patientsRedux.patients);
 
-  console.log(patients);
+
   useEffect(() => {
     dispatch(getPatientsAction());
   }, [dispatch]);
@@ -361,27 +364,27 @@ export function ListOfPatient() {
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      {patients.map((patient) => (
-                        <TableRow key={patient.p_ID}>
+                      {patients?.map((patient) => (
+                        <TableRow key={patient?.p_ID}>
                           <TableCell className="hidden sm:table-cell">
-                            P - {patient.p_ID}
+                            P - {patient?.p_ID}
                           </TableCell>
                           <TableCell className="font-medium">
-                            {patient.name}
+                            {patient?.name}
                           </TableCell>
                           <TableCell>
                             <Badge variant="outline">
-                              {patient.status === 1 ? "Active" : "Dicharged"}
+                              {patient?.status === 1 ? "Active" : "Dicharged"}
                             </Badge>
                           </TableCell>
                           <TableCell className="hidden md:table-cell">
-                            {patient.phoneNumber}
+                            {patient?.phoneNumber}
                           </TableCell>
                           <TableCell className="hidden md:table-cell">
-                            {patient.age}
+                            {patient?.age}
                           </TableCell>
                           <TableCell className="hidden md:table-cell">
-                            {patient.updatedOn}
+                          {formatDate(patient?.updatedOn)}
                           </TableCell>
                           <TableCell>
                             <DropdownMenu>
@@ -397,6 +400,7 @@ export function ListOfPatient() {
                               </DropdownMenuTrigger>
                               <DropdownMenuContent align="end">
                                 <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                                <DropdownMenuItem>Discharged</DropdownMenuItem>
                                 <DropdownMenuItem>Edit</DropdownMenuItem>
                                 <DropdownMenuItem>Delete</DropdownMenuItem>
                               </DropdownMenuContent>

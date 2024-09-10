@@ -11,6 +11,7 @@ const PatientSlice = createSlice({
 
   extraReducers: (builder) => {
     PatientReducer.getAllPatients(builder);
+    PatientReducer.addPatient(builder);
   },
 });
 
