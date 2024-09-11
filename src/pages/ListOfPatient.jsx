@@ -40,12 +40,14 @@ import {
 } from "../redux/actions/PatientAction";
 import { useEffect, useState } from "react";
 import PatientAddPopUp from "./PatientAddPopUp";
+import PatientDetailPop from "./PatientDetailPop";
 
 export const description =
   "An products dashboard with a sidebar navigation. The sidebar has icon navigation. The content area has a breadcrumb and search in the header. It displays a list of products in a table with actions.";
 
 export function ListOfPatient() {
   const [isOpen, setIsOpen] = useState(false);
+  const [isOpenEditWindow, setIsOpenEditWindow] = useState(false);
   const dispatch = useDispatch();
   const patients = useSelector((state) => state.patientsRedux?.patients || []);
 
@@ -53,6 +55,8 @@ export function ListOfPatient() {
   const patientSelector = useSelector(
     (state) => state.patientsRedux?.patient || {}
   );
+
+
 
   useEffect(() => {
     dispatch(getPatientsAction());
@@ -62,6 +66,14 @@ export function ListOfPatient() {
     await dispatch(deletePatientAction(id));
     dispatch(getPatientsAction());
   };
+
+  const handleEditPatient = async (id) => {
+    setSelectPatient(id);
+    setIsOpenEditWindow(true);
+    dispatch(getPatientByIdAction(id));
+  };
+
+
 
   const handleStatus = async (id) => {
     setSelectPatient(id);
@@ -204,7 +216,9 @@ export function ListOfPatient() {
                                     ? "Discharge"
                                     : "Active"}
                                 </DropdownMenuItem>
-                                <DropdownMenuItem>Edit</DropdownMenuItem>
+                                <DropdownMenuItem
+                                onClick={() => handleEditPatient(patient?.p_ID)}
+                                >Edit</DropdownMenuItem>
                                 <DropdownMenuItem
                                   onClick={() => handleDelete(patient?.p_ID)}
                                 >
@@ -231,6 +245,11 @@ export function ListOfPatient() {
       </div>
 
       <PatientAddPopUp isOpen={isOpen} setIsOpen={setIsOpen} />
+      <PatientDetailPop
+        isOpenEditWindow={isOpenEditWindow}
+        setIsOpenEditWindow={setIsOpenEditWindow}
+        patientSelector={patientSelector}
+      />
     </div>
   );
 }
