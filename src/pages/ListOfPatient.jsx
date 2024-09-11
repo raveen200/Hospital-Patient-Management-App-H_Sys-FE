@@ -1,8 +1,4 @@
-import {
-  MoreHorizontal,
-  PlusCircle,
-  Search,
-} from "lucide-react";
+import { MoreHorizontal, PlusCircle, Search } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -36,7 +32,12 @@ import { formatDate } from "../utils/dateUtils.js";
 
 import { useDispatch, useSelector } from "react-redux";
 
-import { getPatientsAction } from "../redux/actions/PatientAction";
+import {
+  getPatientsAction,
+  deletePatientAction,
+  getPatientByIdAction,
+  updatePatientAction,
+} from "../redux/actions/PatientAction";
 import { useEffect, useState } from "react";
 import PatientAddPopUp from "./PatientAddPopUp";
 
@@ -48,10 +49,53 @@ export function ListOfPatient() {
   const dispatch = useDispatch();
   const patients = useSelector((state) => state.patientsRedux?.patients || []);
 
+  const [selectPatient, setSelectPatient] = useState(null);
+  const patientSelector = useSelector(
+    (state) => state.patientsRedux?.patient || {}
+  );
 
   useEffect(() => {
     dispatch(getPatientsAction());
   }, [dispatch]);
+
+  const handleDelete = async (id) => {
+    await dispatch(deletePatientAction(id));
+    dispatch(getPatientsAction());
+  };
+
+  const handleStatus = async (id) => {
+    setSelectPatient(id);
+  };
+
+  useEffect(() => {
+    if (selectPatient !== null) {
+      dispatch(getPatientByIdAction(selectPatient));
+    }
+  }, [dispatch, selectPatient]);
+
+  useEffect(() => {
+    const getandSetData = async (data) => {
+      await dispatch(updatePatientAction(data));
+      dispatch(getPatientsAction());
+    };
+
+    if (patientSelector && patientSelector.p_ID) {
+      const data = {
+        p_ID: patientSelector.p_ID,
+        name: patientSelector.name,
+        age: patientSelector.age,
+        nic: patientSelector.nic,
+        phoneNumber: patientSelector.phoneNumber,
+        updatedOn: new Date(),
+        address: patientSelector.address,
+        email: patientSelector.email,
+        gender: patientSelector.gender,
+        medicalDeatils: patientSelector.medicalDeatils,
+        status: patientSelector.status === 1 ? 0 : 1,
+      };
+      getandSetData(data);
+    }
+  }, [dispatch, patientSelector]);
 
   return (
     <div className="flex min-h-screen w-full flex-col bg-muted/40">
@@ -137,7 +181,7 @@ export function ListOfPatient() {
                             {patient?.age}
                           </TableCell>
                           <TableCell className="hidden md:table-cell">
-                          {formatDate(patient?.updatedOn)}
+                            {formatDate(patient?.updatedOn)}
                           </TableCell>
                           <TableCell>
                             <DropdownMenu>
@@ -153,9 +197,19 @@ export function ListOfPatient() {
                               </DropdownMenuTrigger>
                               <DropdownMenuContent align="end">
                                 <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                                <DropdownMenuItem>Discharged</DropdownMenuItem>
+                                <DropdownMenuItem
+                                  onClick={() => handleStatus(patient?.p_ID)}
+                                >
+                                  {patient?.status === 1
+                                    ? "Discharge"
+                                    : "Active"}
+                                </DropdownMenuItem>
                                 <DropdownMenuItem>Edit</DropdownMenuItem>
-                                <DropdownMenuItem>Delete</DropdownMenuItem>
+                                <DropdownMenuItem
+                                  onClick={() => handleDelete(patient?.p_ID)}
+                                >
+                                  Delete
+                                </DropdownMenuItem>
                               </DropdownMenuContent>
                             </DropdownMenu>
                           </TableCell>

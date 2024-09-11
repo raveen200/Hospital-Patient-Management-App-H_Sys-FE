@@ -1,4 +1,10 @@
-import { getPatientsAction, addPatientAction } from "../actions/PatientAction";
+import {
+  getPatientsAction,
+  addPatientAction,
+  updatePatientAction,
+  deletePatientAction,
+  getPatientByIdAction,
+} from "../actions/PatientAction";
 
 const reducer = {
   getAllPatients: (builder) => {
@@ -14,6 +20,19 @@ const reducer = {
     });
   },
 
+  getPatientById: (builder) => {
+    builder.addCase(getPatientByIdAction.pending, (state) => {
+      state.isLoading = true;
+    });
+    builder.addCase(getPatientByIdAction.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.patient = action.payload;
+    });
+    builder.addCase(getPatientByIdAction.rejected, (state) => {
+      state.isLoading = false;
+    });
+  },
+
   addPatient: (builder) => {
     builder.addCase(addPatientAction.pending, (state) => {
       state.isLoading = true;
@@ -23,6 +42,34 @@ const reducer = {
       state.patients = [...state.patients, action.payload];
     });
     builder.addCase(addPatientAction.rejected, (state) => {
+      state.isLoading = false;
+    });
+  },
+
+  updatePatient: (builder) => {
+    builder.addCase(updatePatientAction.pending, (state) => {
+      state.isLoading = true;
+    });
+    builder.addCase(updatePatientAction.fulfilled, (state) => {
+      state.isLoading = false;
+     
+    });
+    builder.addCase(updatePatientAction.rejected, (state) => {
+      state.isLoading = false;
+    });
+  },
+
+  deletePatient: (builder) => {
+    builder.addCase(deletePatientAction.pending, (state) => {
+      state.isLoading = true;
+    });
+    builder.addCase(deletePatientAction.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.patients = state.patients.filter(
+        (patient) => patient.id !== action.payload
+      );
+    });
+    builder.addCase(deletePatientAction.rejected, (state) => {
       state.isLoading = false;
     });
   },

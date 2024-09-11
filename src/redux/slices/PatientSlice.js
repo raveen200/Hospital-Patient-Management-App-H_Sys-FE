@@ -5,6 +5,7 @@ const PatientSlice = createSlice({
   name: "patientsRedux",
   initialState: {
     patients: [],
+    patient: {},
     IsLoading: false,
     error: null,
   },
@@ -12,6 +13,9 @@ const PatientSlice = createSlice({
   extraReducers: (builder) => {
     PatientReducer.getAllPatients(builder);
     PatientReducer.addPatient(builder);
+    PatientReducer.deletePatient(builder);
+    PatientReducer.getPatientById(builder);
+    PatientReducer.updatePatient(builder);
   },
 });
 
