@@ -15,38 +15,58 @@ import { FiEdit } from "react-icons/fi";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 import propTypes from "prop-types";
-import { addPatientAction } from "../redux/actions/PatientAction";
-import { useDispatch } from "react-redux";
-import { useState } from "react";
+import {
+  getPatientByIdAction,
+  getPatientsAction,
+  updatePatientAction,
+} from "../redux/actions/PatientAction";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect, useState } from "react";
 
 const PatientDetailPop = ({
   isOpenEditWindow,
   setIsOpenEditWindow,
-  patientSelector,
+  reviewPatient,
 }) => {
   const dispatch = useDispatch();
   const handleClose = () => {
     setIsOpenEditWindow(false);
+    setEditBtnOn(false);
     reset();
   };
+
+  const patientEditData = useSelector(
+    (state) => state.patientsRedux?.patient || {}
+  );
+
+  useEffect(() => {
+    if (reviewPatient !== null) {
+      dispatch(getPatientByIdAction(reviewPatient));
+    }
+  }, [dispatch, reviewPatient]);
 
   const [editBtnOn, setEditBtnOn] = useState(false);
 
   const { register, handleSubmit, reset, control } = useForm();
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     const patient = {
+      p_ID: patientEditData.p_ID,
       name: data.name,
-      age: Number(data.age),
+      age: data.age,
       nic: data.nic,
       phoneNumber: data.phoneNumber,
       updatedOn: new Date(),
+      address: data.address,
+      email: data.email,
       gender: Number(data.gender),
+      medicalDeatils: data.medicalDeatils,
     };
 
     // console.log(patient);
 
-    dispatch(addPatientAction(patient));
+    await dispatch(updatePatientAction(patient));
+    dispatch(getPatientsAction());
     handleClose();
   };
 
@@ -56,9 +76,13 @@ const PatientDetailPop = ({
         <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex justify-center items-center">
           <Card className="w-96">
             <CardHeader>
-              <CardTitle>Register a New Patient</CardTitle>
+              <CardTitle>
+                {editBtnOn === false
+                  ? "Review of Patient"
+                  : "Edit Form of Patient"}
+              </CardTitle>
               <div className="flex justify-between">
-                <CardDescription>Let&apos;s Get You Started</CardDescription>
+                <CardDescription>For Better Life</CardDescription>
                 <FiEdit
                   size={22}
                   onClick={() => setEditBtnOn((prevState) => !prevState)}
@@ -68,13 +92,16 @@ const PatientDetailPop = ({
 
             <form onSubmit={handleSubmit(onSubmit)}>
               <CardContent>
-                <div className="grid w-full max-w-sm items-center mt-4 gap-1.5">
+                <div className="grid grid-rows-1 grid-flow-col justify-between w-full max-w-sm items-center mt-4 gap-1.5">
                   <Label htmlFor="text" className="">
                     Name
                   </Label>
                   {!editBtnOn && (
-                    <Label htmlFor="text" className="text-zinc-500 text-sm">
-                      {patientSelector?.name}
+                    <Label
+                      htmlFor="text"
+                      className="text-zinc-500 text-xs mr-20"
+                    >
+                      {patientEditData?.name || "No Data"}
                     </Label>
                   )}
 
@@ -84,36 +111,51 @@ const PatientDetailPop = ({
                       type="text"
                       id="name"
                       placeholder="Name"
-                      defaultValue={patientSelector?.name}
+                      defaultValue={patientEditData?.name}
                     />
                   )}
                 </div>
-                <div className="grid w-full max-w-sm items-center gap-1.5 mt-4">
-                  <Label htmlFor="int">Age</Label>
-                  <Input
-                    {...register("age")}
-                    type="text"
-                    id="age"
-                    placeholder="Age"
-                    required
-                  />
+
+                <div className="grid grid-rows-1 grid-flow-col justify-between  w-full max-w-sm items-center mt-4 gap-1.5">
+                  <Label htmlFor="text" className="">
+                    Age
+                  </Label>
+                  {!editBtnOn && (
+                    <Label
+                      htmlFor="text"
+                      className="text-zinc-500 text-xs mr-20"
+                    >
+                      {patientEditData?.age || "No Data"}
+                    </Label>
+                  )}
+
+                  {editBtnOn && (
+                    <Input
+                      {...register("age")}
+                      type="text"
+                      id="age"
+                      placeholder="Age"
+                      defaultValue={patientEditData?.age}
+                    />
+                  )}
                 </div>
-                <div className="grid w-full max-w-sm items-center gap-1.5 mt-4">
+                <div className="grid grid-rows-1 grid-flow-col  w-full max-w-sm items-center mt-4 gap-1.5">
                   <Label htmlFor="int">Gender</Label>
                   <Controller
                     name="gender"
                     control={control}
-                    defaultValue=""
+                    defaultValue={String(patientEditData?.gender)}
                     render={({ field }) => (
                       <RadioGroup
                         {...field}
+                        value={field.value || patientEditData?.gender}
                         onValueChange={(value) => field.onChange(value)}
                       >
-                        <div className="flex items-center mt-2 space-x-2">
+                        <div className="flex items-center mt-2 space-x-4">
                           <RadioGroupItem value="1" id="r1" />
                           <Label htmlFor="r1">Male</Label>
                         </div>
-                        <div className="flex items-center mb-2 space-x-2">
+                        <div className="flex items-center mb-2 space-x-4">
                           <RadioGroupItem value="2" id="r2" />
                           <Label htmlFor="r2">Female</Label>
                         </div>
@@ -122,24 +164,76 @@ const PatientDetailPop = ({
                   />
                 </div>
 
-                <div className="grid w-full max-w-sm items-center gap-1.5 mt-4">
-                  <Label htmlFor="text">Mobile Number</Label>
-                  <Input
-                    {...register("phoneNumber")}
-                    type="text"
-                    id="phoneNumber"
-                    placeholder="Mobile Number"
-                    required
-                  />
+                <div className="grid grid-rows-1 grid-flow-col justify-between  w-full max-w-sm items-center mt-4 gap-1.5">
+                  <Label htmlFor="text" className="">
+                    Address
+                  </Label>
+                  {!editBtnOn && (
+                    <Label
+                      htmlFor="text"
+                      className="text-zinc-500 text-xs mr-20"
+                    >
+                      {patientEditData?.address || "No Data"}
+                    </Label>
+                  )}
+
+                  {editBtnOn && (
+                    <Input
+                      {...register("address")}
+                      type="text"
+                      id="address"
+                      placeholder="Address"
+                      defaultValue={patientEditData?.address}
+                    />
+                  )}
                 </div>
-                <div className="grid w-full max-w-sm items-center gap-1.5 mt-4">
-                  <Label htmlFor="int">NIC</Label>
-                  <Input
-                    {...register("nic")}
-                    type="text"
-                    id="nic"
-                    placeholder="NIC"
-                  />
+
+                <div className="grid grid-rows-1 grid-flow-col justify-between   w-full max-w-sm items-center mt-4 gap-1.5">
+                  <Label htmlFor="text" className="">
+                    Mobile Number
+                  </Label>
+                  {!editBtnOn && (
+                    <Label
+                      htmlFor="text"
+                      className="text-zinc-500 text-xs mr-20"
+                    >
+                      {patientEditData?.phoneNumber || "No Data"}
+                    </Label>
+                  )}
+
+                  {editBtnOn && (
+                    <Input
+                      {...register("phoneNumber")}
+                      type="text"
+                      id="phoneNumber"
+                      placeholder="Address"
+                      defaultValue={patientEditData?.phoneNumber}
+                    />
+                  )}
+                </div>
+
+                <div className="grid grid-rows-1 grid-flow-col justify-between   w-full max-w-sm items-center mt-4 gap-1.5">
+                  <Label htmlFor="text" className="">
+                    NIC
+                  </Label>
+                  {!editBtnOn && (
+                    <Label
+                      htmlFor="text"
+                      className="text-zinc-500 text-xs mr-20"
+                    >
+                      {patientEditData?.nic || "No Data"}
+                    </Label>
+                  )}
+
+                  {editBtnOn && (
+                    <Input
+                      {...register("address")}
+                      type="text"
+                      id="nic"
+                      placeholder="NIC"
+                      defaultValue={patientEditData?.nic}
+                    />
+                  )}
                 </div>
               </CardContent>
               <CardFooter>
@@ -163,7 +257,7 @@ const PatientDetailPop = ({
 PatientDetailPop.propTypes = {
   isOpenEditWindow: propTypes.bool,
   setIsOpenEditWindow: propTypes.func,
-  patientSelector: propTypes.object,
+  reviewPatient: propTypes.string,
 };
 
 export default PatientDetailPop;

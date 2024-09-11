@@ -50,13 +50,15 @@ export function ListOfPatient() {
   const [isOpenEditWindow, setIsOpenEditWindow] = useState(false);
   const dispatch = useDispatch();
   const patients = useSelector((state) => state.patientsRedux?.patients || []);
-
   const [selectPatient, setSelectPatient] = useState(null);
+  const [reviewPatient, SetReviewPatient] = useState(null);
   const patientSelector = useSelector(
     (state) => state.patientsRedux?.patient || {}
   );
 
+  const [filterValue, setFilterValue] = useState(0);
 
+  console.log(filterValue);
 
   useEffect(() => {
     dispatch(getPatientsAction());
@@ -68,12 +70,9 @@ export function ListOfPatient() {
   };
 
   const handleEditPatient = async (id) => {
-    setSelectPatient(id);
+    SetReviewPatient(id);
     setIsOpenEditWindow(true);
-    dispatch(getPatientByIdAction(id));
   };
-
-
 
   const handleStatus = async (id) => {
     setSelectPatient(id);
@@ -86,7 +85,7 @@ export function ListOfPatient() {
   }, [dispatch, selectPatient]);
 
   useEffect(() => {
-    const getandSetData = async (data) => {
+    const getAndSetData = async (data) => {
       await dispatch(updatePatientAction(data));
       dispatch(getPatientsAction());
     };
@@ -103,9 +102,9 @@ export function ListOfPatient() {
         email: patientSelector.email,
         gender: patientSelector.gender,
         medicalDeatils: patientSelector.medicalDeatils,
-        status: patientSelector.status === 1 ? 0 : 1,
+        status: patientSelector.status === 1 ? 2 : 1,
       };
-      getandSetData(data);
+      getAndSetData(data);
     }
   }, [dispatch, patientSelector]);
 
@@ -116,10 +115,18 @@ export function ListOfPatient() {
           <Tabs defaultValue="all">
             <div className="flex items-center">
               <TabsList>
-                <TabsTrigger value="all">All</TabsTrigger>
-                <TabsTrigger value="active">Active</TabsTrigger>
+                <TabsTrigger value="all" onClick={() => setFilterValue(0)}>
+                  All
+                </TabsTrigger>
+                <TabsTrigger onClick={() => setFilterValue(1)} value="active">
+                  Active
+                </TabsTrigger>
 
-                <TabsTrigger value="archived" className="hidden sm:flex">
+                <TabsTrigger
+                  value="archived"
+                  onClick={() => setFilterValue(2)}
+                  className=" sm:flex"
+                >
                   Discharged
                 </TabsTrigger>
               </TabsList>
@@ -183,7 +190,7 @@ export function ListOfPatient() {
                           </TableCell>
                           <TableCell>
                             <Badge variant="outline">
-                              {patient?.status === 1 ? "Active" : "Dicharged"}
+                              {patient?.status === 1 ? "Active" : "Discharged"}
                             </Badge>
                           </TableCell>
                           <TableCell className="hidden md:table-cell">
@@ -217,8 +224,12 @@ export function ListOfPatient() {
                                     : "Active"}
                                 </DropdownMenuItem>
                                 <DropdownMenuItem
-                                onClick={() => handleEditPatient(patient?.p_ID)}
-                                >Edit</DropdownMenuItem>
+                                  onClick={() =>
+                                    handleEditPatient(patient?.p_ID)
+                                  }
+                                >
+                                  Edit
+                                </DropdownMenuItem>
                                 <DropdownMenuItem
                                   onClick={() => handleDelete(patient?.p_ID)}
                                 >
@@ -248,7 +259,7 @@ export function ListOfPatient() {
       <PatientDetailPop
         isOpenEditWindow={isOpenEditWindow}
         setIsOpenEditWindow={setIsOpenEditWindow}
-        patientSelector={patientSelector}
+        reviewPatient={reviewPatient}
       />
     </div>
   );
