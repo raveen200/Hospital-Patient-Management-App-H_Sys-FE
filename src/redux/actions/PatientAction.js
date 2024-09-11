@@ -12,7 +12,6 @@ export const getPatientsAction = createAsyncThunk(
   PATIENT_REDUX_ACTIONS.GET_PATIENTS,
   async () => {
     const response = await getAllPatients();
-    console.log(response, "response");
     return response;
   }
 );
