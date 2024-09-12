@@ -1,5 +1,5 @@
-import React from 'react';
-import { useLocation, Link } from 'react-router-dom';
+import React from "react";
+import { useLocation, Link } from "react-router-dom";
 import {
   Home,
   LineChart,
@@ -9,7 +9,7 @@ import {
   Settings,
   ShoppingCart,
   Users2,
-} from 'lucide-react';
+} from "lucide-react";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -17,8 +17,8 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from '@/components/ui/breadcrumb';
-import { Button } from '@/components/ui/button';
+} from "@/components/ui/breadcrumb";
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -26,17 +26,17 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import TooltipCmp from '@/components/ui/tooltip';
-import { ROUTES } from '@/constants/Index';
+} from "@/components/ui/dropdown-menu";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import TooltipCmp from "@/components/ui/tooltip";
+import { ROUTES } from "@/constants/Index";
 
 export const description =
-  'a product edit page. The product edit page has a form to edit the product details, stock, product category, product status, and product images. The product edit page has a sidebar navigation and a main content area. The main content area has a form to edit the product details, stock, product category, product status, and product images. The sidebar navigation has links to product details, stock, product category, product status, and product images.';
+  "a product edit page. The product edit page has a form to edit the product details, stock, product category, product status, and product images. The product edit page has a sidebar navigation and a main content area. The main content area has a form to edit the product details, stock, product category, product status, and product images. The sidebar navigation has links to product details, stock, product category, product status, and product images.";
 
 export const Layout = ({ children }) => {
   const location = useLocation();
-  const pathnames = location.pathname.split('/').filter((x) => x);
+  const pathnames = location.pathname.split("/").filter((x) => x);
 
   return (
     <div className="flex min-h-screen w-full flex-col bg-muted/40">
@@ -58,40 +58,13 @@ export const Layout = ({ children }) => {
               <span className="sr-only">Dashboard</span>
             </Link>
           </TooltipCmp>
-          <TooltipCmp text="Orders">
+          <TooltipCmp text="Patient">
             <Link
               to={ROUTES.Patients.path}
               className="flex h-9 w-9 items-center justify-center rounded-lg bg-accent text-accent-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
             >
-              <ShoppingCart className="h-5 w-5" />
-              <span className="sr-only">Orders</span>
-            </Link>
-          </TooltipCmp>
-          <TooltipCmp text="Products">
-            <Link
-              to="#"
-              className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
-            >
-              <Package className="h-5 w-5" />
-              <span className="sr-only">Products</span>
-            </Link>
-          </TooltipCmp>
-          <TooltipCmp text="Customers">
-            <Link
-              to="#"
-              className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
-            >
               <Users2 className="h-5 w-5" />
-              <span className="sr-only">Customers</span>
-            </Link>
-          </TooltipCmp>
-          <TooltipCmp text="Analytics">
-            <Link
-              to="#"
-              className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
-            >
-              <LineChart className="h-5 w-5" />
-              <span className="sr-only">Analytics</span>
+              <span className="sr-only">Patient</span>
             </Link>
           </TooltipCmp>
         </nav>
@@ -139,20 +112,7 @@ export const Layout = ({ children }) => {
                   <ShoppingCart className="h-5 w-5" />
                   Orders
                 </Link>
-                <Link
-                  to="#"
-                  className="flex items-center gap-4 px-2.5 text-foreground"
-                >
-                  <Package className="h-5 w-5" />
-                  Products
-                </Link>
-                <Link
-                  to="#"
-                  className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
-                >
-                  <Users2 className="h-5 w-5" />
-                  Customers
-                </Link>
+
                 <Link
                   to="#"
                   className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
@@ -171,9 +131,11 @@ export const Layout = ({ children }) => {
                 </BreadcrumbLink>
               </BreadcrumbItem>
               {pathnames.map((value, index) => {
-                const to = `/${pathnames.slice(0, index + 1).join('/')}`;
+                const to = `/${pathnames.slice(0, index + 1).join("/")}`;
                 const isLast = index === pathnames.length - 1;
-                const routeName = Object.values(ROUTES).find(route => route.path === to)?.name;
+                const routeName = Object.values(ROUTES).find(
+                  (route) => route.path === to
+                )?.name;
                 return (
                   <React.Fragment key={to}>
                     <BreadcrumbSeparator />
@@ -191,8 +153,7 @@ export const Layout = ({ children }) => {
               })}
             </BreadcrumbList>
           </Breadcrumb>
-          <div className="relative ml-auto flex-1 md:grow-0">
-          </div>
+          <div className="relative ml-auto flex-1 md:grow-0"></div>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button
