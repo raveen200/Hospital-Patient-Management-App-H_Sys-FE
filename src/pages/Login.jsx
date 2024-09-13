@@ -10,12 +10,37 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ROUTES } from "@/constants/Index";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { loginPatient } from "@/service/AuthService";
+import { useForm } from "react-hook-form";
+import Cookies from "universal-cookie";
 
 export const description =
   "A simple login form with email and password. The submit button says 'Sign in'.";
 
 export function LoginForm() {
+  const cookies = new Cookies();
+  const navigate = useNavigate();
+
+  const { register, handleSubmit } = useForm({
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
+
+  const onSubmit = async (data) => {
+    try {
+      const response = await loginPatient(data);
+
+      cookies.set("token", response.data.accessToken, { path: "/" });
+      navigate("/");
+    } catch (error) {
+      alert("An error occurred. Please try again.");
+      console.error(error);
+    }
+  };
+
   return (
     <div className="flex items-center pb-24 justify-center min-h-screen">
       <Card className="w-full h-full max-w-sm">
@@ -26,21 +51,30 @@ export function LoginForm() {
           </CardDescription>
         </CardHeader>
         <CardContent className="grid gap-4">
-          <div className="grid gap-2">
-            <Label htmlFor="email">Email</Label>
-            <Input
-              id="email"
-              type="email"
-              placeholder="m@example.com"
-              required
-            />
-          </div>
-          <div className="grid gap-2">
-            <Label htmlFor="password">Password</Label>
-            <Input id="password" type="password" required />
-          </div>
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <div className="grid gap-2">
+              <Label htmlFor="email">Email</Label>
+              <Input
+                id="email"
+                type="email"
+                placeholder="denvo@example.com"
+                {...register("email", { required: true })}
+              />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="password">Password</Label>
+              <Input
+                {...register("password", { required: true })}
+                id="password"
+                type="password"
+                placeholder="********"
+              />
+            </div>
 
-          <Button className="w-full mt-4">Sign in</Button>
+            <Button type="submit" className="w-full mt-4">
+              Sign in
+            </Button>
+          </form>
           <div className="mt-4 text-center text-sm">
             <Link to={ROUTES.Sign_Up.path}>
               Don&apos;t have an account? <u> Sign in</u>

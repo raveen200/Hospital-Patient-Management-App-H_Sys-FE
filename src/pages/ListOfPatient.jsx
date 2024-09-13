@@ -58,8 +58,6 @@ export function ListOfPatient() {
 
   const [filterValue, setFilterValue] = useState(0);
 
-  console.log(filterValue);
-
   useEffect(() => {
     dispatch(getPatientsAction());
   }, [dispatch]);

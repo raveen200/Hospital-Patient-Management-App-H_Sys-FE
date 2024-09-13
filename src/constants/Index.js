@@ -32,3 +32,9 @@ export const ROUTES = {
     name: 'Sign Up'
   }
 };
+
+
+export const AUTH_API_CONSTANTS = {
+  LOGIN: "/login",
+  SIGN_UP: "/register",
+};

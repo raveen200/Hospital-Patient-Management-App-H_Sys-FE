@@ -257,7 +257,7 @@ const PatientDetailPop = ({
 PatientDetailPop.propTypes = {
   isOpenEditWindow: propTypes.bool,
   setIsOpenEditWindow: propTypes.func,
-  reviewPatient: propTypes.string,
+  reviewPatient: propTypes.number,
 };
 
 export default PatientDetailPop;
