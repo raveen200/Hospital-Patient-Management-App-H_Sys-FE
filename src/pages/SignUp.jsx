@@ -9,22 +9,28 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ROUTES } from "@/constants/Index";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 import { registerPatient } from "@/service/AuthService";
 import { useForm } from "react-hook-form";
+import { useState } from "react";
 
 export const description =
   "A sign up form with first name, last name, email and password inside a card. There's an option to sign up with GitHub and a link to login if you already have an account";
 
 export function SignUp() {
   const navigate = useNavigate();
+
   const { register, handleSubmit } = useForm({
     defaultValues: {
       email: "",
       password: "",
     },
   });
+
+ 
+ 
+
 
   const onSubmit = async (data) => {
     try {
