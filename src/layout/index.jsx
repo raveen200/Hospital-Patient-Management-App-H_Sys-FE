@@ -180,7 +180,7 @@ export const Layout = ({ children }) => {
             </DropdownMenuContent>
           </DropdownMenu>
         </header>
-        <main>{children}</main>
+        <main className="">{children}</main>
       </div>
     </div>
   );
