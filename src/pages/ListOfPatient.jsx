@@ -35,10 +35,9 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   getPatientsAction,
   deletePatientAction,
-  getPatientByIdAction,
   updatePatientAction,
 } from "../redux/actions/PatientAction";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import PatientAddPopUp from "./PatientAddPopUp";
 import PatientDetailPop from "./PatientDetailPop";
 
@@ -50,61 +49,61 @@ export function ListOfPatient() {
   const [isOpenEditWindow, setIsOpenEditWindow] = useState(false);
   const dispatch = useDispatch();
   const patients = useSelector((state) => state.patientsRedux?.patients || []);
-  const [selectPatient, setSelectPatient] = useState(null);
-  const [reviewPatient, SetReviewPatient] = useState(null);
-  const patientSelector = useSelector(
-    (state) => state.patientsRedux?.patient || {}
-  );
+  // const [statusBTN, setStatusBTN] = useState(false);
+  const [selectedPatient, setSelectedPatient] = useState(null);
+  // const [reviewPatient, SetReviewPatient] = useState(null);
 
   const [filterValue, setFilterValue] = useState(0);
 
+  const getPatients = useCallback((async() => {
+    try {
+      await dispatch(getPatientsAction()).unwrap();
+    } catch (error) {
+      console.error("Failed to fetch patients:", error);
+    }
+  }), [dispatch]);
+
+  // fetch patients on component mount
   useEffect(() => {
-    dispatch(getPatientsAction());
-  }, [dispatch]);
+    getPatients();
+  }, [getPatients]);
 
   const handleDelete = async (id) => {
-    await dispatch(deletePatientAction(id));
-    dispatch(getPatientsAction());
+    try {
+      await dispatch(deletePatientAction(id)).unwrap();
+      await getPatients();
+    } catch (error) {
+      console.error("Failed to delete the patient:", error);
+    }
   };
 
-  const handleEditPatient = async (id) => {
-    SetReviewPatient(id);
+  const handleEditPatient = async (patient) => {
+    setSelectedPatient(patient);
     setIsOpenEditWindow(true);
   };
 
-  const handleStatus = async (id) => {
-    setSelectPatient(id);
+  const handleStatus = async (patient) => {
+    try {
+      const data = {
+        ...patient,
+        status: patient.status === 1 ? 2 : 1,
+      };
+      await dispatch(updatePatientAction(data)).unwrap();
+      await getPatients();
+    } catch (error) {
+      console.error("Failed to update the patient status:", error);
+    }
   };
 
-  useEffect(() => {
-    if (selectPatient !== null) {
-      dispatch(getPatientByIdAction(selectPatient));
+  const handleEditPatientModalClose = (isSubmitted = true) => {
+    console.log("handleEditPatientModalClose" , isSubmitted);
+    setIsOpenEditWindow(false);
+    setSelectedPatient(null);
+    if (isSubmitted) {
+      getPatients();
     }
-  }, [dispatch, selectPatient]);
+  };
 
-  useEffect(() => {
-    const getAndSetData = async (data) => {
-      await dispatch(updatePatientAction(data));
-      dispatch(getPatientsAction());
-    };
-
-    if (patientSelector && patientSelector.p_ID) {
-      const data = {
-        p_ID: patientSelector.p_ID,
-        name: patientSelector.name,
-        age: patientSelector.age,
-        nic: patientSelector.nic,
-        phoneNumber: patientSelector.phoneNumber,
-        updatedOn: new Date(),
-        address: patientSelector.address,
-        email: patientSelector.email,
-        gender: patientSelector.gender,
-        medicalDeatils: patientSelector.medicalDeatils,
-        status: patientSelector.status === 1 ? 2 : 1,
-      };
-      getAndSetData(data);
-    }
-  }, [dispatch, patientSelector]);
 
   return (
     <div className="flex min-h-screen w-full flex-col bg-muted/40">
@@ -215,7 +214,7 @@ export function ListOfPatient() {
                               <DropdownMenuContent align="end">
                                 <DropdownMenuLabel>Actions</DropdownMenuLabel>
                                 <DropdownMenuItem
-                                  onClick={() => handleStatus(patient?.p_ID)}
+                                  onClick={() => handleStatus(patient)}
                                 >
                                   {patient?.status === 1
                                     ? "Discharge"
@@ -223,7 +222,7 @@ export function ListOfPatient() {
                                 </DropdownMenuItem>
                                 <DropdownMenuItem
                                   onClick={() =>
-                                    handleEditPatient(patient?.p_ID)
+                                    handleEditPatient(patient)
                                   }
                                 >
                                   Edit
@@ -256,8 +255,8 @@ export function ListOfPatient() {
       <PatientAddPopUp isOpen={isOpen} setIsOpen={setIsOpen} />
       <PatientDetailPop
         isOpenEditWindow={isOpenEditWindow}
-        setIsOpenEditWindow={setIsOpenEditWindow}
-        reviewPatient={reviewPatient}
+        handleModalClose={handleEditPatientModalClose}
+        selectedPatient={selectedPatient}
       />
     </div>
   );

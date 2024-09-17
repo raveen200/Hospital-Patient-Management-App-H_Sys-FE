@@ -3,7 +3,6 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -13,13 +12,12 @@ import { ROUTES } from "@/constants/Index";
 import { Link, useNavigate } from "react-router-dom";
 import { loginPatient } from "@/service/AuthService";
 import { useForm } from "react-hook-form";
-import Cookies from "universal-cookie";
+import Cookies from "js-cookie";
 
 export const description =
   "A simple login form with email and password. The submit button says 'Sign in'.";
 
 export function LoginForm() {
-  const cookies = new Cookies();
   const navigate = useNavigate();
 
   const { register, handleSubmit } = useForm({
@@ -33,8 +31,8 @@ export function LoginForm() {
     try {
       const response = await loginPatient(data);
 
-      cookies.set("token", response.data.accessToken, { path: "/" });
-      navigate("/");
+      Cookies.set("token", response.data.accessToken, { path: "/" });
+      navigate(ROUTES.Dashboard.path);
     } catch (error) {
       alert("An error occurred. Please try again.");
       console.error(error);

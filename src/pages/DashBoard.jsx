@@ -167,6 +167,7 @@ export function Dashboard() {
               </Table>
             </CardContent>
           </Card>
+
           <Card x-chunk="dashboard-01-chunk-5">
             <CardHeader>
               <CardTitle>Recent Sales</CardTitle>
@@ -249,6 +250,7 @@ export function Dashboard() {
               </div>
             </CardContent>
           </Card>
+          
         </div>
       </main>
     </div>

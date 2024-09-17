@@ -16,58 +16,50 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 import propTypes from "prop-types";
 import {
-  getPatientByIdAction,
-  getPatientsAction,
   updatePatientAction,
 } from "../redux/actions/PatientAction";
-import { useDispatch, useSelector } from "react-redux";
-import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import { useState } from "react";
 
 const PatientDetailPop = ({
   isOpenEditWindow,
-  setIsOpenEditWindow,
-  reviewPatient,
+  handleModalClose,
+  selectedPatient,
 }) => {
   const dispatch = useDispatch();
-  const handleClose = () => {
-    setIsOpenEditWindow(false);
+  const handleClose = (isSubmitted = false) => {
+    handleModalClose(isSubmitted);
     setEditBtnOn(false);
     reset();
   };
 
-  const patientEditData = useSelector(
-    (state) => state.patientsRedux?.patient || {}
-  );
-
-  useEffect(() => {
-    if (reviewPatient !== null) {
-      dispatch(getPatientByIdAction(reviewPatient));
-    }
-  }, [dispatch, reviewPatient]);
 
   const [editBtnOn, setEditBtnOn] = useState(false);
 
   const { register, handleSubmit, reset, control } = useForm();
 
   const onSubmit = async (data) => {
-    const patient = {
-      p_ID: patientEditData.p_ID,
-      name: data.name,
-      age: data.age,
-      nic: data.nic,
-      phoneNumber: data.phoneNumber,
-      updatedOn: new Date(),
-      address: data.address,
-      email: data.email,
-      gender: Number(data.gender),
-      medicalDeatils: data.medicalDeatils,
-    };
-
-    // console.log(patient);
-
-    await dispatch(updatePatientAction(patient));
-    dispatch(getPatientsAction());
-    handleClose();
+    try {
+      const patient = {
+        p_ID: selectedPatient.p_ID,
+        name: data.name,
+        age: data.age,
+        nic: data.nic,
+        phoneNumber: data.phoneNumber,
+        updatedOn: new Date(),
+        address: data.address,
+        email: data.email,
+        gender: Number(data.gender),
+        medicalDeatils: data.medicalDeatils,
+      };
+  
+      // console.log(patient);
+  
+      await dispatch(updatePatientAction(patient)).unwrap();
+      handleClose(true);
+    } catch (error) {
+      console.error("Failed to update patient:", error);
+    }
   };
 
   return (
@@ -101,7 +93,7 @@ const PatientDetailPop = ({
                       htmlFor="text"
                       className="text-zinc-500 text-xs mr-20"
                     >
-                      {patientEditData?.name || "No Data"}
+                      {selectedPatient?.name || "No Data"}
                     </Label>
                   )}
 
@@ -111,7 +103,7 @@ const PatientDetailPop = ({
                       type="text"
                       id="name"
                       placeholder="Name"
-                      defaultValue={patientEditData?.name}
+                      defaultValue={selectedPatient?.name}
                     />
                   )}
                 </div>
@@ -125,7 +117,7 @@ const PatientDetailPop = ({
                       htmlFor="text"
                       className="text-zinc-500 text-xs mr-20"
                     >
-                      {patientEditData?.age || "No Data"}
+                      {selectedPatient?.age || "No Data"}
                     </Label>
                   )}
 
@@ -135,7 +127,7 @@ const PatientDetailPop = ({
                       type="text"
                       id="age"
                       placeholder="Age"
-                      defaultValue={patientEditData?.age}
+                      defaultValue={selectedPatient?.age}
                     />
                   )}
                 </div>
@@ -144,11 +136,11 @@ const PatientDetailPop = ({
                   <Controller
                     name="gender"
                     control={control}
-                    defaultValue={String(patientEditData?.gender)}
+                    defaultValue={String(selectedPatient?.gender)}
                     render={({ field }) => (
                       <RadioGroup
                         {...field}
-                        value={field.value || patientEditData?.gender}
+                        value={field.value || selectedPatient?.gender}
                         onValueChange={(value) => field.onChange(value)}
                       >
                         <div className="flex items-center mt-2 space-x-4">
@@ -173,7 +165,7 @@ const PatientDetailPop = ({
                       htmlFor="text"
                       className="text-zinc-500 text-xs mr-20"
                     >
-                      {patientEditData?.address || "No Data"}
+                      {selectedPatient?.address || "No Data"}
                     </Label>
                   )}
 
@@ -183,7 +175,7 @@ const PatientDetailPop = ({
                       type="text"
                       id="address"
                       placeholder="Address"
-                      defaultValue={patientEditData?.address}
+                      defaultValue={selectedPatient?.address}
                     />
                   )}
                 </div>
@@ -197,7 +189,7 @@ const PatientDetailPop = ({
                       htmlFor="text"
                       className="text-zinc-500 text-xs mr-20"
                     >
-                      {patientEditData?.phoneNumber || "No Data"}
+                      {selectedPatient?.phoneNumber || "No Data"}
                     </Label>
                   )}
 
@@ -207,7 +199,7 @@ const PatientDetailPop = ({
                       type="text"
                       id="phoneNumber"
                       placeholder="Address"
-                      defaultValue={patientEditData?.phoneNumber}
+                      defaultValue={selectedPatient?.phoneNumber}
                     />
                   )}
                 </div>
@@ -221,7 +213,7 @@ const PatientDetailPop = ({
                       htmlFor="text"
                       className="text-zinc-500 text-xs mr-20"
                     >
-                      {patientEditData?.nic || "No Data"}
+                      {selectedPatient?.nic || "No Data"}
                     </Label>
                   )}
 
@@ -231,7 +223,7 @@ const PatientDetailPop = ({
                       type="text"
                       id="nic"
                       placeholder="NIC"
-                      defaultValue={patientEditData?.nic}
+                      defaultValue={selectedPatient?.nic}
                     />
                   )}
                 </div>
@@ -240,7 +232,7 @@ const PatientDetailPop = ({
                 <Button
                   variant="secondary"
                   className="mr-4"
-                  onClick={handleClose}
+                  onClick={() => handleClose()}
                 >
                   Close
                 </Button>
@@ -256,8 +248,9 @@ const PatientDetailPop = ({
 
 PatientDetailPop.propTypes = {
   isOpenEditWindow: propTypes.bool,
-  setIsOpenEditWindow: propTypes.func,
+  handleModalClose: propTypes.func,
   reviewPatient: propTypes.number,
+  selectedPatient: propTypes.object,
 };
 
 export default PatientDetailPop;
