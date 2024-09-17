@@ -49,19 +49,17 @@ export function ListOfPatient() {
   const [isOpenEditWindow, setIsOpenEditWindow] = useState(false);
   const dispatch = useDispatch();
   const patients = useSelector((state) => state.patientsRedux?.patients || []);
-  // const [statusBTN, setStatusBTN] = useState(false);
+
   const [selectedPatient, setSelectedPatient] = useState(null);
-  // const [reviewPatient, SetReviewPatient] = useState(null);
+  const [searchQuery, setSearchQuery] = useState("");
 
-  const [filterValue, setFilterValue] = useState(0);
-
-  const getPatients = useCallback((async() => {
+  const getPatients = useCallback(async () => {
     try {
       await dispatch(getPatientsAction()).unwrap();
     } catch (error) {
       console.error("Failed to fetch patients:", error);
     }
-  }), [dispatch]);
+  }, [dispatch]);
 
   // fetch patients on component mount
   useEffect(() => {
@@ -96,7 +94,7 @@ export function ListOfPatient() {
   };
 
   const handleEditPatientModalClose = (isSubmitted = true) => {
-    console.log("handleEditPatientModalClose" , isSubmitted);
+    console.log("handleEditPatientModalClose", isSubmitted);
     setIsOpenEditWindow(false);
     setSelectedPatient(null);
     if (isSubmitted) {
@@ -104,6 +102,13 @@ export function ListOfPatient() {
     }
   };
 
+  const handleSearchChange = (event) => {
+    setSearchQuery(event.target.value);
+  };
+
+  const filteredPatients = patients.filter((patient) =>
+    patient.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   return (
     <div className="flex min-h-screen w-full flex-col bg-muted/40">
@@ -112,18 +117,10 @@ export function ListOfPatient() {
           <Tabs defaultValue="all">
             <div className="flex items-center">
               <TabsList>
-                <TabsTrigger value="all" onClick={() => setFilterValue(0)}>
-                  All
-                </TabsTrigger>
-                <TabsTrigger onClick={() => setFilterValue(1)} value="active">
-                  Active
-                </TabsTrigger>
+                <TabsTrigger value="all">All</TabsTrigger>
+                <TabsTrigger value="active">Active</TabsTrigger>
 
-                <TabsTrigger
-                  value="archived"
-                  onClick={() => setFilterValue(2)}
-                  className=" sm:flex"
-                >
+                <TabsTrigger value="archived" className=" sm:flex">
                   Discharged
                 </TabsTrigger>
               </TabsList>
@@ -132,6 +129,8 @@ export function ListOfPatient() {
                 <Input
                   type="search"
                   placeholder="Search..."
+                  value={searchQuery}
+                  onChange={handleSearchChange}
                   className="w-full rounded-lg bg-background pl-8 md:w-[200px] lg:w-[336px]"
                 />
 
@@ -177,7 +176,7 @@ export function ListOfPatient() {
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      {patients?.map((patient) => (
+                      {filteredPatients?.map((patient) => (
                         <TableRow key={patient?.p_ID}>
                           <TableCell className="hidden sm:table-cell">
                             P - {patient?.p_ID}
@@ -221,9 +220,7 @@ export function ListOfPatient() {
                                     : "Active"}
                                 </DropdownMenuItem>
                                 <DropdownMenuItem
-                                  onClick={() =>
-                                    handleEditPatient(patient)
-                                  }
+                                  onClick={() => handleEditPatient(patient)}
                                 >
                                   Edit
                                 </DropdownMenuItem>
