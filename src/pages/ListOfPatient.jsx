@@ -118,11 +118,6 @@ export function ListOfPatient() {
             <div className="flex items-center">
               <TabsList>
                 <TabsTrigger value="all">All</TabsTrigger>
-                <TabsTrigger value="active">Active</TabsTrigger>
-
-                <TabsTrigger value="archived" className=" sm:flex">
-                  Discharged
-                </TabsTrigger>
               </TabsList>
               <div className="ml-auto flex items-center gap-2">
                 <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />

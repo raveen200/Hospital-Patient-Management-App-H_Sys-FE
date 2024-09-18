@@ -13,6 +13,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { loginPatient } from "@/service/AuthService";
 import { useForm } from "react-hook-form";
 import Cookies from "js-cookie";
+import { Cookie } from "lucide-react";
 
 
 export const description =
@@ -31,10 +32,11 @@ export function LoginForm() {
 
   const onSubmit = async (data) => {
     try {
-    
+     
       const response = await loginPatient(data);
       console.log(response);
       Cookies.set("token", response.data.accessToken, { path: "/" });
+      Cookies.set("userEmail",data.email)
       navigate(ROUTES.Dashboard.path);
     } catch (error) {
       alert("An error occurred. Please try again.");
