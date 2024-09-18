@@ -14,11 +14,13 @@ import { loginPatient } from "@/service/AuthService";
 import { useForm } from "react-hook-form";
 import Cookies from "js-cookie";
 
+
 export const description =
   "A simple login form with email and password. The submit button says 'Sign in'.";
 
 export function LoginForm() {
   const navigate = useNavigate();
+
 
   const { register, handleSubmit } = useForm({
     defaultValues: {
@@ -29,8 +31,9 @@ export function LoginForm() {
 
   const onSubmit = async (data) => {
     try {
+    
       const response = await loginPatient(data);
-
+      console.log(response);
       Cookies.set("token", response.data.accessToken, { path: "/" });
       navigate(ROUTES.Dashboard.path);
     } catch (error) {

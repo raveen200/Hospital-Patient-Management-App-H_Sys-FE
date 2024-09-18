@@ -169,8 +169,9 @@ export function Dashboard() {
           </Card>
 
           <Card x-chunk="dashboard-01-chunk-5">
+
             <CardHeader>
-              <CardTitle>Recent Sales</CardTitle>
+              <CardTitle>Recent Login</CardTitle>
             </CardHeader>
             <CardContent className="grid gap-8">
               <div className="flex items-center gap-4">
@@ -249,6 +250,8 @@ export function Dashboard() {
                 <div className="ml-auto font-medium">+$39.00</div>
               </div>
             </CardContent>
+
+            
           </Card>
           
         </div>
