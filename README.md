@@ -7,7 +7,8 @@ This Hospital Management Application was built with **React.js** and **.NET Core
 * **Patient Data Management:** Create, edit, and view patient records efficiently.
 * **State Validation:** Ensure data integrity through comprehensive validation rules.
 * **Intuitive UI:** Tailwind CSS and shadcn/ui provide a visually appealing and user-friendly interface.
-* **Integrated state management using **Redux Toolkit**.
+* **JWT Authentication:** Securely exchange user credentials and manage user sessions.
+* **Redux Toolkit** Integrated state management.
 
 ## Technologies Used
 * **Frontend**: React.js
