@@ -12,16 +12,14 @@ function App() {
   return (
     <Router>
       <Layout>
-      <Routes>
-        
+        <Routes>
           <Route path={ROUTES.Login.path} element={<LoginForm />} />
           <Route path={ROUTES.Sign_Up.path} element={<SignUp />} />
-          <Route element={<ProtectedRoute />}>
+          <Route>
             <Route path={ROUTES.Dashboard.path} element={<Dashboard />} />
             <Route path={ROUTES.Patients.path} element={<ListOfPatient />} />
           </Route>
-      
-          </Routes>
+        </Routes>
       </Layout>
     </Router>
   );
