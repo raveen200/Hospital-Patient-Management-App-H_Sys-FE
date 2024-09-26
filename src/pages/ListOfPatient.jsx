@@ -40,6 +40,7 @@ import {
 import { useCallback, useEffect, useState } from "react";
 import PatientAddPopUp from "./PatientAddPopUp";
 import PatientDetailPop from "./PatientDetailPop";
+import { patients } from "@/constants/data";
 
 export const description =
   "An products dashboard with a sidebar navigation. The sidebar has icon navigation. The content area has a breadcrumb and search in the header. It displays a list of products in a table with actions.";
@@ -48,7 +49,7 @@ export function ListOfPatient() {
   const [isOpen, setIsOpen] = useState(false);
   const [isOpenEditWindow, setIsOpenEditWindow] = useState(false);
   const dispatch = useDispatch();
-  const patients = useSelector((state) => state.patientsRedux?.patients || []);
+  // const patients = useSelector((state) => state.patientsRedux?.patients || []);
 
   const [selectedPatient, setSelectedPatient] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");

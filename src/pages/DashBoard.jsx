@@ -47,13 +47,15 @@ import { Link } from "react-router-dom";
 import { ROUTES } from "@/constants/Index";
 import { formatDate } from "@/utils/dateUtils";
 import Cookies from "js-cookie";
+import { patients } from "@/constants/data";
 
 export const description =
   "An application shell with a header and main content area. The header has a navbar, a search input and and a user nav dropdown. The user nav is toggled by a button with an avatar image.";
 
 export function Dashboard() {
   const dispatch = useDispatch();
-  const patients = useSelector((state) => state.patientsRedux?.patients || []);
+  // const patients = useSelector((state) => state.patientsRedux?.patients || []);
+  // console.log(patients);
   const patientCount = patients.length;
   const activePatientCount = patients.filter(
     (patient) => patient.status === 1
@@ -81,7 +83,8 @@ export function Dashboard() {
     return () => clearInterval(interval);
   }, []);
 
-  const user = Cookies.get("userEmail");
+  // const user = Cookies.get("userEmail");
+  const user = "Admin";
 
   return (
     <div className="flex min-h-screen w-full flex-col">
@@ -112,7 +115,7 @@ export function Dashboard() {
           <Card x-chunk="dashboard-01-chunk-2">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">
-                {" "}
+         
                 Discharge Patients
               </CardTitle>
               <CreditCard className="h-4 w-4 text-muted-foreground" />
