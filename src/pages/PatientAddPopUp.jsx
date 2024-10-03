@@ -36,7 +36,7 @@ const PatientAddPopUp = ({ isOpen, setIsOpen }) => {
       gender: Number(data.gender),
     };
 
-    // console.log(patient);
+    console.log(patient);
 
     dispatch(addPatientAction(patient));
     handleClose();

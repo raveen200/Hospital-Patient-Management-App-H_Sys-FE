@@ -15,9 +15,7 @@ import { FiEdit } from "react-icons/fi";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 import propTypes from "prop-types";
-import {
-  updatePatientAction,
-} from "../redux/actions/PatientAction";
+import { updatePatientAction } from "../redux/actions/PatientAction";
 import { useDispatch } from "react-redux";
 import { useState } from "react";
 
@@ -33,6 +31,7 @@ const PatientDetailPop = ({
     reset();
   };
 
+  console.log(selectedPatient);
 
   const [editBtnOn, setEditBtnOn] = useState(false);
 
@@ -52,9 +51,9 @@ const PatientDetailPop = ({
         gender: Number(data.gender),
         medicalDeatils: data.medicalDeatils,
       };
-  
+
       // console.log(patient);
-  
+
       await dispatch(updatePatientAction(patient)).unwrap();
       handleClose(true);
     } catch (error) {
@@ -219,9 +218,8 @@ const PatientDetailPop = ({
 
                   {editBtnOn && (
                     <Input
-                      {...register("address")}
+                      {...register("nic")}
                       type="text"
-                      id="nic"
                       placeholder="NIC"
                       defaultValue={selectedPatient?.nic}
                     />
