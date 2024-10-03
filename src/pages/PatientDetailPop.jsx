@@ -31,8 +31,6 @@ const PatientDetailPop = ({
     reset();
   };
 
-  console.log(selectedPatient);
-
   const [editBtnOn, setEditBtnOn] = useState(false);
 
   const { register, handleSubmit, reset, control } = useForm();
@@ -50,6 +48,7 @@ const PatientDetailPop = ({
         email: data.email,
         gender: Number(data.gender),
         medicalDeatils: data.medicalDeatils,
+        status: selectedPatient.status,
       };
 
       // console.log(patient);
@@ -172,7 +171,6 @@ const PatientDetailPop = ({
                     <Input
                       {...register("address")}
                       type="text"
-                      id="address"
                       placeholder="Address"
                       defaultValue={selectedPatient?.address}
                     />
