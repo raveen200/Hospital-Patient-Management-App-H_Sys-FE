@@ -2,6 +2,10 @@
 
 This Hospital Management Application was built with **React.js** and **.NET Core**. The application is designed to manage patient data and validate their state efficiently.
 
+## Demo
+
+Check out the live demo [here](https://hospital-mgt.netlify.app/).
+
 ## Features
 
 * **Patient Data Management:** Create, edit, and view patient records efficiently.
