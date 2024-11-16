@@ -1,7 +1,9 @@
 import { Button } from "../components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+
 import { Controller, useForm } from "react-hook-form";
+
 import {
   Card,
   CardContent,
@@ -27,6 +29,7 @@ const PatientAddPopUp = ({ isOpen, setIsOpen }) => {
   const { register, handleSubmit, reset, control } = useForm();
 
   const onSubmit = (data) => {
+    console.log(data);
     const patient = {
       name: data.name,
       age: Number(data.age),
@@ -95,6 +98,17 @@ const PatientAddPopUp = ({ isOpen, setIsOpen }) => {
                         </div>
                       </RadioGroup>
                     )}
+                  />
+                </div>
+
+                <div className="grid w-full max-w-sm items-center gap-1.5 mt-4">
+                  <Label htmlFor="int">Date of Birth</Label>
+                  <Input
+                    {...register("dob")}
+                    type="text"
+                    id="dob"
+                    placeholder="xx/xx/xxxx"
+                    required
                   />
                 </div>
 
