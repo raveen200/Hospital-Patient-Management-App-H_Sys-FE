@@ -86,8 +86,9 @@ export function Dashboard() {
   return (
     <div className="flex min-h-screen w-full flex-col">
       <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8">
-        <div className="grid gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-4">
-          <Card x-chunk="dashboard-01-chunk-0">
+
+        <div className="grid gap-4 md:grid-cols-1 md:gap-4 lg:grid-cols-1">
+          <Card className="bg-blue-100" x-chunk="dashboard-01-chunk-0">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">
                 Total Patients
@@ -98,7 +99,7 @@ export function Dashboard() {
               <div className="text-2xl font-bold">{patientCount}</div>
             </CardContent>
           </Card>
-          <Card x-chunk="dashboard-01-chunk-1">
+          <Card className="bg-green-100" x-chunk="dashboard-01-chunk-1">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">
                 Active Patients
@@ -109,10 +110,9 @@ export function Dashboard() {
               <div className="text-2xl font-bold">{activePatientCount}</div>
             </CardContent>
           </Card>
-          <Card x-chunk="dashboard-01-chunk-2">
+          <Card className="bg-red-100" x-chunk="dashboard-01-chunk-2">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">
-                {" "}
                 Discharge Patients
               </CardTitle>
               <CreditCard className="h-4 w-4 text-muted-foreground" />
@@ -122,6 +122,11 @@ export function Dashboard() {
             </CardContent>
           </Card>
         </div>
+
+
+
+
+
         <div className="grid gap-4 md:gap-8 lg:grid-cols-2 xl:grid-cols-3">
           <Card className="xl:col-span-2" x-chunk="dashboard-01-chunk-4">
             <CardHeader className="flex flex-row items-center">
