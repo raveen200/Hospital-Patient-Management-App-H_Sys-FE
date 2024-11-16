@@ -80,7 +80,7 @@ export function LoginForm() {
           </form>
           <div className="mt-4 text-center text-sm">
             <Link to={ROUTES.Sign_Up.path}>
-              Don&apos;t have an account? <u> Sign in</u>
+              Don&apos;t have an account? <u> Sign up</u>
             </Link>
           </div>
         </CardContent>

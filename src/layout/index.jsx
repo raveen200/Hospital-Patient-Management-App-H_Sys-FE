@@ -186,7 +186,6 @@ export const Layout = ({ children }) => {
               <DropdownMenuContent align="end">
                 <DropdownMenuLabel>My Account</DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem>Settings</DropdownMenuItem>
                 
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={handleLogout}>
